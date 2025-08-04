@@ -1,6 +1,5 @@
 import React from "react";
-import styled from "styled-components";
-import { useState } from "react";
+import styled, { keyframes } from "styled-components";
 
 const RollDice = ({
   handleError,
@@ -13,10 +12,11 @@ const RollDice = ({
   return (
     <DiceContainer $isSelect={isSelect}>
       <div>
-        <img
+        <StyledImg
           src={`/Dice/dice_${current}.png`}
           alt="diceImage"
           onClick={handleCurrent}
+          $isSelect={isSelect}
         />
       </div>
       <p>Click on Dice to roll</p>
@@ -31,26 +31,57 @@ const RollDice = ({
 
 export default RollDice;
 
+// Animation keyframes
+const roll = keyframes`
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+// Styled components
 const DiceContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 48px;
+
   p {
     font-size: 24px;
     font-weight: 500;
+
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
   }
-  img {
-    animation: roll 0.5s ease-in-out;
-    cursor: ${({ $isSelect }) => ($isSelect ? "pointer" : "not-allowed")};
-  }
+
   @media (max-width: 768px) {
     margin-top: 32px;
   }
-  img:active {
-    animation: roll 0.5s ease-in-out;
+`;
+
+const StyledImg = styled.img`
+  width: 180px;
+  height: auto;
+  cursor: ${({ $isSelect }) => ($isSelect ? "pointer" : "not-allowed")};
+  transition: transform 0.5s ease-in-out;
+  &:active {
+    animation: ${roll} 0.5s ease-in-out;
+  }
+
+  @media (max-width: 768px) {
+    width: 120px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
   }
 `;
+
 const Warning = styled.div`
   p {
     background-color: #ffe0e0;
@@ -60,6 +91,6 @@ const Warning = styled.div`
     margin-top: 16px;
     max-width: 300px;
     text-align: center;
-    animation: fadeIn 0.4s ease-in-out;
+    animation: ${fadeIn} 0.4s ease-in-out;
   }
 `;
